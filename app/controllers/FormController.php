@@ -39,6 +39,7 @@ class FormController
 
             try {
                 $form->store_to_CSV();
+                $form->save();
                 $_SESSION['success'] = "Inscrito correctamente!!";
 
             } catch (\Throwable $th) {
@@ -71,6 +72,12 @@ class FormController
         $errors = [];
         $data = [];
 
+        $validMail = Self::verificar_mail($mail);
+        
+        if ($validMail) {
+            $errors['mail'] = "El mail ingresado ya existe, porfavor interar con otro";
+        }
+
         if (empty($name)) {
             $errors['name'] = "Por favor ingresa tu nombre";
         } elseif (!preg_match("/^[a-zA-Z\s]*$/", $name)) {
@@ -102,6 +109,12 @@ class FormController
     {
         // echo $var["id"];
         var_dump($var);
+    }
 
+    static function verificar_mail($mail)
+    {
+        $form = new Form();
+        $form->mail = $mail;
+        return $form->validate_mail();
     }
 }
