@@ -9,7 +9,7 @@ $router = new Router();
 $router->get('/', 'FormController::index');
 $router->post('/', 'FormController::save');
 $router->post('/descargarCSV', 'FormController::descargarCSV');
-
+$router->get('/form/{id}/{status}', 'FormController::show');
 
 
 $request_uri = $_SERVER['REQUEST_URI'];

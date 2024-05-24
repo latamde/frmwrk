@@ -12,11 +12,13 @@ class FormController
         render_template('form/index', [
             "title" => "Prueba Técnica"
         ]);
+        unset($_SESSION['success']);
     }
 
     static function save()
     {
         if ($_SERVER["REQUEST_METHOD"] == "POST") {
+            unset($_SESSION['success']);
             $form = new Form();
             $form->name = $_POST["name"];
             $form->mail = $_POST["mail"];
@@ -31,14 +33,20 @@ class FormController
                     "errors" => $errors,
                     "data" => $data,
                 ]);
+                 
+                exit();
             }
 
-            $form->store_to_CSV();
+            try {
+                $form->store_to_CSV();
+                $_SESSION['success'] = "Inscrito correctamente!!";
 
-            return render_template('form/index', [
-                "title" => "Prueba Técnica",
-                "success" => true
-            ]);
+            } catch (\Throwable $th) {
+
+            }
+
+            header("Location: /");
+            exit();
         }
     }
      
@@ -88,5 +96,12 @@ class FormController
         }
 
         return [$errors, $data];
+    }
+    
+    static function show($var)
+    {
+        // echo $var["id"];
+        var_dump($var);
+
     }
 }
